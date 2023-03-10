@@ -1,0 +1,54 @@
+version: "2"
+
+services:
+    client:
+        # image: react-client
+        build: 
+            context: ./client
+            dockerfile: Dockerfile
+        restart: always
+        ports:
+            - "3080:80"
+        volumes:
+            - ./client:/client
+            - /client/node_modules
+        links:
+            - api
+        networks:
+            - webappnetwork
+    api:
+        # image: node-api
+        build: 
+            context: ./api
+            dockerfile: Dockerfile
+        restart: always
+        environment:
+                - PORT=3080
+                - MONGO_URI=mongodb+srv://admin:KyuTKAawRPScAdql@cluster0.afngj.mongodb.net/02_openai
+                - OPENAI_KEY=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
+                - CHATGPT_TOKEN=""
+                - BING_TOKEN=""
+        ports:
+            - "9000:3080"
+        volumes:
+            - ./api:/api
+            - /api/node_modules
+        # depends_on:
+        #     - mongodb
+        networks:
+            - webappnetwork
+    # mongodb:
+    #     image: mongo
+    #     restart: always
+    #     container_name: mongodb
+    #     volumes:
+    #         - ./data-node:/data/db
+    #     ports:
+    #         - 27020:27017
+    #     command: mongod --noauth
+    #     networks:
+    #         - webappnetwork
+
+networks:
+    webappnetwork:
+        driver: bridge
