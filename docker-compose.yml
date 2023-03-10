@@ -22,10 +22,12 @@ services:
             context: ./api
             dockerfile: Dockerfile
         restart: always
+        env_file:
+            - .env
         environment:
-                - PORT=3080
-                - MONGO_URI=mongodb+srv://admin:KyuTKAawRPScAdql@cluster0.afngj.mongodb.net/02_openai
-                - OPENAI_KEY=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
+                - PORT=${PORT}
+                - MONGO_URI=${MONGO_URI}
+                - OPENAI_KEY=${OPENAI_KEY}
                 - CHATGPT_TOKEN=""
                 - BING_TOKEN=""
         ports:
@@ -37,18 +39,6 @@ services:
         #     - mongodb
         networks:
             - webappnetwork
-    # mongodb:
-    #     image: mongo
-    #     restart: always
-    #     container_name: mongodb
-    #     volumes:
-    #         - ./data-node:/data/db
-    #     ports:
-    #         - 27020:27017
-    #     command: mongod --noauth
-    #     networks:
-    #         - webappnetwork
-
 networks:
     webappnetwork:
         driver: bridge
